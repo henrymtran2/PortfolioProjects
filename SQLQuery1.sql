@@ -91,11 +91,33 @@ Join PortfolioProject..CovidVaccinations vac
 where dea.continent is not null
 -- order by 2, 3
 
+-- Adjusted query for easier follow. 1.
+
+Select SUM(new_cases) as total_cases, SUM(cast(new_deaths as int)) as total_deaths, SUM(cast(new_deaths as int))/SUM(new_cases)*100 as DeathPercentage
+From PortfolioProject..CovidDeaths
+Where continent is not null
+order by 1,2
 
 
+-- 2
+Select location, SUM(cast(new_deaths as int)) as TotalDeathCount
+From PortfolioProject..CovidDeaths
+Where continent is null
+and location not in ('World','European Union', 'International', 'Upper middle income', 'High income', 'lower middle income', 'low income')
+Group by location
+order by TotalDeathCount desc
 
+-- 3
+Select Location, Population, Max(total_cases) as HighestInfectionCount, Max((total_cases/population))*100 as PercentPopulationInfected
+From PortfolioProject..CovidDeaths
+Group by location, population
+order by PercentPopulationInfected desc
 
-
+-- 4 
+Select Location, Population, date, Max(total_cases) as HighestInfectionCount, Max((total_cases/population))*100 as PercentPopulationInfected
+From PortfolioProject..CovidDeaths
+Group by location, population, date
+order by PercentPopulationInfected desc
 
 
 
